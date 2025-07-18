@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Insurance | QuotePilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #10b981;
+      --secondary: #059669;
+    }
+    body { 
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      min-height: 100vh;
+    }
+    .form-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+    }
+    .coverage-option {
+      transition: all 0.2s ease;
+    }
+    .coverage-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .coverage-option.selected {
+      border-color: var(--primary);
+      background-color: rgba(209, 250, 229, 0.5);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .input-focus {
+      transition: all 0.2s ease;
+    }
+    .input-focus:focus {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #1e293b;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.875rem;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  
+@keyframes fly {
+  0% { transform: translateX(0); opacity: 0.7; }
+  50% { transform: translateX(5px) translateY(-2px); opacity: 1; }
+  100% { transform: translateX(10px); opacity: 0.7; }
+}
+.animate-fly {
+  animation: fly 2s ease-in-out infinite;
+}
+
+</style>
+</head>
+<body class="flex flex-col">
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <img src="assets/logo.webp" alt="QuotePilot" width="32" height="32" class="h-8 mr-3" loading="lazy">
+          <span class="text-xl font-bold text-green-600">QuotePilot</span>
+<svg class="h-6 w-6 ml-2 text-blue-500 animate-fly" fill="currentColor" viewBox="0 0 24 24">
+  <path d="M2.5 19.5L21 12 2.5 4.5 2 10l15 2-15 2z" />
+</svg>
+
+        </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="text-gray-500 hover:text-green-600 px-1 py-2 text-sm font-medium transition">Home</a>
+        </nav>
+        <div class="md:hidden flex items-center">
+          <button class="text-gray-500 hover:text-gray-700 focus:outline-none" id="mobileMenuButton">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+    <div class="form-card rounded-xl p-6 sm:p-8 w-full max-w-2xl border border-gray-100 shadow-lg">
+      <div class="mb-8 text-center">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Home Insurance Details</h1>
+        <p class="text-gray-600">Tell us about your property to get accurate quotes.</p>
+      </div>
+      
+      <form id="homeForm" action="quotes.html" method="get" class="space-y-6">
+        <!-- Hidden fields -->
+        <input type="hidden" name="firstName">
+        <input type="hidden" name="lastName">
+        <input type="hidden" name="email">
+        <input type="hidden" name="phone">
+        <input type="hidden" name="dob">
+        <input type="hidden" name="zip">
+        <input type="hidden" name="coverageType" value="home">
+        
+        <!-- Property Information -->
+        <div class="space-y-4">
+          <h2 class="text-lg font-medium text-gray-900 flex items-center">
+            Property Information
+            <span class="tooltip ml-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              <span class="tooltiptext">Provide accurate property details for the most precise quotes</span>
+            </span>
+          </h2>
+          
+          <div>
+            <label for="propertyType" class="block text-sm font-medium text-gray-700 mb-1">Property Type*</label>
+            <select id="propertyType" name="propertyType" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus">
+              <option value="">Select</option>
+              <option value="single_family">Single Family Home</option>
+              <option value="condo">Condo</option>
+              <option value="townhouse">Townhouse</option>
+              <option value="multi_family">Multi-Family</option>
+              <option value="rental">Rental Property</option>
+              <option value="mobile">Mobile Home</option>
+            </select>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="yearBuilt" class="block text-sm font-medium text-gray-700 mb-1">Year Built*</label>
+              <input type="number" id="yearBuilt" name="yearBuilt" min="1800" max="2025" required 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                     placeholder="e.g. 1995">
+            </div>
+            <div>
+              <label for="squareFeet" class="block text-sm font-medium text-gray-700 mb-1">Square Footage*</label>
+              <div class="relative">
+                <input type="number" id="squareFeet" name="squareFeet" min="500" required 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                       placeholder="e.g. 1800">
+                <span class="absolute right-3 top-3 text-gray-500">sq ft</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label for="homeValue" class="block text-sm font-medium text-gray-700 mb-1">Estimated Home Value*</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3 text-gray-500">$</span>
+              <input type="number" id="homeValue" name="homeValue" min="50000" required 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus pl-8"
+                     placeholder="e.g. 350000">
+            </div>
+          </div>
+          
+          <div>
+            <label for="roofType" class="block text-sm font-medium text-gray-700 mb-1">Roof Type*</label>
+            <select id="roofType" name="roofType" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus">
+              <option value="">Select</option>
+              <option value="asphalt">Asphalt Shingle</option>
+              <option value="metal">Metal</option>
+              <option value="tile">Tile</option>
+              <option value="wood">Wood Shake</option>
+              <option value="flat">Flat Roof</option>
+              <option value="slate">Slate</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="roofAge" class="block text-sm font-medium text-gray-700 mb-1">Roof Age (years)*</label>
+            <input type="number" id="roofAge" name="roofAge" min="0" max="50" required 
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                   placeholder="e.g. 10">
+          </div>
+        </div>
+        
+        <!-- Property Features -->
+        <div class="space-y-4 pt-4">
+          <h2 class="text-lg font-medium text-gray-900">Property Features</h2>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-1">Number of Bedrooms</label>
+              <input type="number" id="bedrooms" name="bedrooms" min="1" max="20" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                     placeholder="e.g. 3">
+            </div>
+            <div>
+              <label for="bathrooms" class="block text-sm font-medium text-gray-700 mb-1">Number of Bathrooms</label>
+              <input type="number" id="bathrooms" name="bathrooms" min="1" max="20" step="0.5" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                     placeholder="e.g. 2.5">
+            </div>
+          </div>
+          
+          <div>
+            <label for="swimmingPool" class="block text-sm font-medium text-gray-700 mb-1">Swimming Pool</label>
+            <select id="swimmingPool" name="swimmingPool" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus">
+              <option value="none">No Pool</option>
+              <option value="above_ground">Above Ground</option>
+              <option value="in_ground">In Ground</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="securitySystem" class="block text-sm font-medium text-gray-700 mb-1">Security System</label>
+            <select id="securitySystem" name="securitySystem" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus">
+              <option value="none">None</option>
+              <option value="basic">Basic Alarm</option>
+              <option value="monitored">Monitored System</option>
+              <option value="smart">Smart Home System</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Coverage Options -->
+        <div class="space-y-4 pt-4">
+          <h2 class="text-lg font-medium text-gray-900">Coverage Options*</h2>
+          <p class="text-sm text-gray-500">Select the types of coverage you're interested in</p>
+          
+          <div class="space-y-3">
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="dwelling" class="form-checkbox mt-1 h-5 w-5 text-green-600" checked>
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Dwelling Coverage</span>
+                <span class="block text-sm text-gray-500">Covers the structure of your home</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="personal_property" class="form-checkbox mt-1 h-5 w-5 text-green-600" checked>
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Personal Property</span>
+                <span class="block text-sm text-gray-500">Covers your belongings</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="liability" class="form-checkbox mt-1 h-5 w-5 text-green-600" checked>
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Liability Protection</span>
+                <span class="block text-sm text-gray-500">Covers injuries/damages to others</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="loss_of_use" class="form-checkbox mt-1 h-5 w-5 text-green-600" checked>
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Loss of Use</span>
+                <span class="block text-sm text-gray-500">Covers additional living expenses if home is uninhabitable</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="flood" class="form-checkbox mt-1 h-5 w-5 text-green-600">
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Flood Insurance</span>
+                <span class="block text-sm text-gray-500">Additional coverage for flood damage</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="earthquake" class="form-checkbox mt-1 h-5 w-5 text-green-600">
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Earthquake Coverage</span>
+                <span class="block text-sm text-gray-500">Additional protection for earthquakes</span>
+              </div>
+            </label>
+            
+            <label class="coverage-option flex items-start p-4 bg-white rounded-lg border border-gray-200 cursor-pointer">
+              <input type="checkbox" name="coverage_needs[]" value="jewelry" class="form-checkbox mt-1 h-5 w-5 text-green-600">
+              <div class="ml-3">
+                <span class="block font-medium text-gray-900">Jewelry & Valuables</span>
+                <span class="block text-sm text-gray-500">Additional coverage for high-value items</span>
+              </div>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Current Insurance -->
+        <div class="space-y-4 pt-4">
+          <h2 class="text-lg font-medium text-gray-900">Current Insurance (Optional)</h2>
+          
+          <div>
+            <label for="currentCarrier" class="block text-sm font-medium text-gray-700 mb-1">Current Carrier</label>
+            <input type="text" id="currentCarrier" name="currentCarrier" 
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                   placeholder="e.g. Allstate, Farmers">
+          </div>
+          
+          <div>
+            <label for="currentPremium" class="block text-sm font-medium text-gray-700 mb-1">Current Premium</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3 text-gray-500">$</span>
+              <input type="number" id="currentPremium" name="currentPremium" min="0" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus pl-8"
+                     placeholder="e.g. 1500">
+              <select id="premiumFrequency" name="premiumFrequency" class="absolute right-3 top-3 text-gray-500 bg-transparent border-none focus:ring-0">
+                <option value="monthly">/month</option>
+                <option value="annual">/year</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label for="currentDeductible" class="block text-sm font-medium text-gray-700 mb-1">Current Deductible</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3 text-gray-500">$</span>
+              <input type="number" id="currentDeductible" name="currentDeductible" min="0" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus pl-8"
+                     placeholder="e.g. 1000">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Additional Information -->
+        <div>
+          <label for="additionalInfo" class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+          <textarea id="additionalInfo" name="additionalInfo" rows="3" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 input-focus"
+                    placeholder="Any special coverage needs, recent renovations, or additional information..."></textarea>
+        </div>
+        
+        <div class="pt-6">
+          <button type="submit" class="w-full btn-primary text-white py-3.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+            Get Home Insurance Quotes
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+      <p>© 2025 QuotePilot. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', function() {
+          const nav = document.querySelector('nav');
+          nav.classList.toggle('hidden');
+          nav.classList.toggle('flex');
+          nav.classList.toggle('flex-col');
+          nav.classList.toggle('absolute');
+          nav.classList.toggle('top-16');
+          nav.classList.toggle('left-0');
+          nav.classList.toggle('right-0');
+          nav.classList.toggle('bg-white');
+          nav.classList.toggle('p-4');
+          nav.classList.toggle('shadow-md');
+        });
+      }
+
+      // Transfer URL parameters to hidden fields
+      const urlParams = new URLSearchParams(window.location.search);
+      const fields = ['firstName', 'lastName', 'email', 'phone', 'dob', 'zip', 'coverageType'];
+      
+      fields.forEach(field => {
+        if(urlParams.has(field)) {
+          document.querySelector(`input[name="${field}"]`).value = urlParams.get(field);
+        }
+      });
+      
+      // Coverage option selection styling
+      document.querySelectorAll('.coverage-option').forEach(option => {
+        const checkbox = option.querySelector('input[type="checkbox"]');
+        
+        option.addEventListener('click', (e) => {
+          if(e.target !== checkbox) {
+            checkbox.checked = !checkbox.checked;
+          }
+          option.classList.toggle('selected', checkbox.checked);
+        });
+        
+        checkbox.addEventListener('change', () => {
+          option.classList.toggle('selected', checkbox.checked);
+        });
+      });
+
+      // Form validation
+      const form = document.getElementById('homeForm');
+      form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            field.classList.add('border-red-500');
+            isValid = false;
+          } else {
+            field.classList.remove('border-red-500');
+          }
+        });
+        
+        const checkedCoverage = form.querySelectorAll('input[name="coverage_needs[]"]:checked').length;
+        if (checkedCoverage === 0) {
+          alert('Please select at least one coverage option');
+          isValid = false;
+        }
+        
+        if (!isValid) {
+          e.preventDefault();
+          // Scroll to first error
+          const firstError = form.querySelector('.border-red-500');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
